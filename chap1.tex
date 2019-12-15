@@ -1,0 +1,392 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{kpfonts}
+\usepackage{calrsfs}
+\usepackage{cmll}
+\usepackage[backref]{hyperref}
+\usepackage{xcolor}
+\hypersetup{colorlinks,linkcolor={black!50},citecolor={black!50},urlcolor={black!50}}
+\usepackage{sectsty}
+
+\renewcommand{\thesection}{\Roman{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{faktor}
+
+\usepackage{tikz-cd}
+\usepackage{refcount}
+\usepackage{xparse}
+\usepackage[margin=2cm]{geometry}
+\usepackage{multicol}
+\usepackage{tabu}
+
+\theoremstyle{definition}
+\newtheorem{exo}{}[subsection]
+
+\theoremstyle{remark}
+\newtheorem*{rmq}{Remark}
+
+\newenvironment{motivation}{\leavevmode\slshape}{}
+
+\def\subset{\subseteq}
+\def\N{\mathbb{N}}
+\def\Z{\mathbb{Z}}
+\def\Q{\mathbb{Q}}
+\def\R{\mathbb{R}}
+\def\C{\mathbb{C}}
+\def\dom{\mathrm{dom}}
+\def\im{\mathrm{im}}
+\def\ker{\mathrm{ker}}
+\def\id{\mathrm{id}}
+\def\Obj{\mathrm{Obj}}
+\def\Hom{\mathrm{Hom}}
+\def\End{\mathrm{End}}
+\newcommand{\catname}[1]{{\normalfont\textbf{#1}}}
+\newcommand{\Set}{\catname{Set}}
+\newcommand{\Group}{\catname{Group}}
+\newcommand{\Ring}{\catname{Ring}}
+\newcommand{\Cat}{\catname{C}}
+
+\begin{document}
+
+\tableofcontents
+
+\section{Preliminaries: Set theory and categories}
+
+\subsection{Naive set theory}
+
+\begin{exo}
+	If there is a set $V$ such that $\forall x,x\in V$, let $A=\{x\in V\mid x\notin x\}$.
+
+	Now, $A\in A\iff A\in V\land A\notin A\iff A\notin A$ and this is a contradiction.
+
+	Finally, $\forall x,\exists y,y\notin x$.
+
+\end{exo}
+
+\begin{exo}
+	$\mathcal P_\sim=\{[a]_\sim\mid a\in S\}$
+
+	$\sim$ is symmetric, so given $a\in S$, $a\in[a]_\sim$ so $[a]_\sim\neq\emptyset$
+
+	As $\sim$ is reflexive, $\bigcup_{a\in S}[a]_\sim=S$.
+
+	Finally, if $[a]_\sim\neq[b]_\sim$, let us prove that $[a]_\sim\cap[b]_\sim=\emptyset$.
+
+	Indeed, if $x\sim a$ and $x\sim b$ then by transitivity and symmetry, $a\sim b$ which is a contradiction.
+\end{exo}
+
+\begin{exo}
+	If $\mathcal P$ is a partition on $S$, let us define $a\sim b$ iff $\exists p\in P,a\in P\land b\in P$.
+
+	This relation is reflexive because $\forall p\in P,p\neq\emptyset$
+
+	It is obviously symmetric.
+
+	If $a\sim b$ and $b\sim c$ then there is $p\in P$ such that $a,b\in p$ and $p'\in P$ such that $b,c\in p$. $b\in p\cap p'$ so $p\cap p'\neq\emptyset$ so $p=p'$ and $b\sim c$.
+\end{exo}
+
+\begin{rmq}
+	Let $\catname{Eq}(S)$ the set of all relations on $S$ and $\mathfrak P$ the set of all partitions of $S$.
+
+	\begin{align*}\catname{Eq}(S)&\to\mathfrak P\\\sim&\mapsto\mathcal P_\sim\end{align*} is a bijection which has as inverse the `operation' of the previous exercise.
+\end{rmq}
+
+\begin{exo}
+	An equivalence relation $\sim$ on $\{1,2,3\}$ is a subset of $\{1,2,3\}^2$ which necessarily includes the diagonal $\{(1,1),(2,2),(3,3)\}$.
+
+	Then we have three choices as far as distinct unordered couples are concerned:
+	\begin{itemize}
+		\item There is no distinct $a$ and $b$ such that $a\sim b$,
+		\item There are distinct $a$, $b$, $c$ such that $a\sim b$ and $b\sim c$, in which case, we necessarily have $a\sim c$,
+		\item There is only two distinct $a$ and $b$ such that $a\sim b$. We have then ${3\choose2}=3$ choices.
+	\end{itemize}
+
+	We can verify that in each case we indeed have an equivalence relation on $\{1,2,3\}$ so there are 5 equivalence relations on $\{1,2,3\}$.
+\end{exo}
+
+\begin{exo}
+	Let $R$ a relation on $\{1,2,3\}$ such that $R=\{(1,1),(2,2),(3,3),(1,2),(2,1),(2,3),(3,2)\}$
+
+	We can verify that $R$ is reflexive, symmetric, but not transitive.
+
+	Trying to define $\mathcal P_R$ will not lead to a partition, as $[1]_R\neq[3]_R$ (because $(1,3)\notin R$) but $[1]_R\cap[3]_R\neq\emptyset$ (because $2\in[1]_R\cap[3]_R$).
+\end{exo}
+
+\begin{exo}\label{r-z-sphere}
+	$a-a=0\in\Z$ so $\sim$ is reflexive.
+
+	If $a-b\in\Z$ then $b-a\in\Z$, so it is symmetric.
+
+	If $a-b\in\Z$ and $b-c\in\Z$ then $a-c=a-b+(b-c)\in\Z$, so $\sim$ is an equivalence relation.
+
+	\medskip
+
+	\begin{align*}f:\R&\to[0,1[\\
+				x&\mapsto\text{the only }y\in[0,1[\text{ such that }y-x\in\Z
+	\end{align*}
+
+	$f$ is clearly surjective.
+
+	We remark that $x\sim y$ iff $f(x)=f(y)$.
+
+  We can thus define:\begin{align*}f':\faktor{\R}{\sim}&\to[0,1[\\
+			[x]_\sim&\mapsto f(x)\end{align*}
+
+	$f'$ is a bijection.
+	
+	\medskip
+
+	Because $\sim$ is an equivalence relation, $\approx$ is clearly an equivalence relation.
+
+	Let \begin{align*}
+			g:\R^2&\to [0,1[^2\\
+			(x,y)&\mapsto (f(x),f(y))\end{align*}
+
+	Because $f$ is a bijection it is easy to prove that $g$ is a bijection.
+\end{exo}
+
+\begin{rmq}
+	We could have factored $f$ using Claim~5.5, page~34.
+
+	\medskip
+	The situation for $\R^2$ can be represented by the following diagram:
+
+	\begin{tikzcd}
+		{[0,1[} & {[0,1[}^2\arrow[l]\arrow[r] & {[0,1[}\\
+		\R\arrow[u,"f"] & \R^2\arrow[u,"\exists!f\& f",dashed]\arrow[r]\arrow[l] & \R\arrow[u,"f"]\\
+	\end{tikzcd}
+
+	$(f,g)\mapsto f\parr g$ is bijective and $f\parr f$ is bijective iff $f$ is bijective.
+\end{rmq}
+
+
+\subsection{Functions between sets}
+
+\begin{exo}
+	Let us prove on the set of bijections from a set $S$ to a set $S'$ has cardinality $n!$ if $|S|=|S'|=n$.
+	
+	By induction on $n\in\N$:
+
+	If $n=0$, $\emptyset:S\to S'$ is the only bijection. The statement is true.
+
+	Suppose the statement is true for any set $S,S'$ such that $|S|=|S'|=n$. Let $T,T'$ be such that $|T|=|T'|=n+1$.
+
+	Pick $x\in T$. A bijection from $T$ to $T'$ is the datum of an image $x'\in T'$ for $x$ and a bijection from $T\setminus\{x\}\to T'\setminus{x'}$. There are $n!$ such bijections.
+
+	Finally, there are $(n+1)n!=(n+1)!$ bijections from $T\to T'$
+\end{exo}
+
+\begin{rmq}
+	The previous situation is represented by the following diagram:
+
+	\begin{tikzcd}
+		\{x'\}\arrow[r] & T'\cong\{x'\}\coprod T'\setminus\{x'\} & T'\setminus\{x'\}\arrow[l]\\
+		\{x\}\arrow[r]\arrow[u,"f"] & T\cong\{x\}\coprod T\setminus\{x\}\arrow[u,"\exists!f\parr g",dashed] & T\setminus\{x\}\arrow[l]\arrow[u,"g"]\\
+	\end{tikzcd}
+
+	$f\parr g$ is bijective iff $f$ and $g$ are bijective.
+\end{rmq}
+
+\begin{exo}
+	If $f$ has a right inverse $g$, $f\circ g=\id_B$.
+
+	$f(g(B))=(f\circ g)(B)=\id_B(B)=B$, but $g(B)\subset A$ so $f(A)=B$. Hence $f$ is surjective.
+
+	If $f$ is surjective, let $\alpha:\mathcal P(A)\setminus\{\emptyset\}\to A$ be a choice function.
+
+	$\forall x\in B,\exists z\in A,f(z)=x$. Let $g(x)=\alpha(\{z\in A\mid f(z)=x\})$.
+
+	It is clear that $f\circ g=\id_B$.
+\end{exo}
+
+\begin{exo}
+	If $f:A\to B$ is a bijection, $f\circ f^{-1}=\id_B$ and $f^{-1}\circ f=\id_A$ but Corollary~2.2 tells us that if a function has a two-sided inverse, then it is a bijection so $f^{-1}$ is a bijection.
+
+	If $f:A\to B$ and $g:B\to C$ are bijections, $g\circ f:A\to C$ is also a bijection.
+
+	Indeed, $(g\circ f)\circ(f^{-1}\circ g^{-1})=\id_C$ and $(f^{-1}\circ g^{-1})\circ(g\circ f)=\id_A$.
+\end{exo}
+
+\begin{exo}
+	Let $\sim$ be the relation `isomorphism'.
+	$X\sim X$ because $id_X:X\to X$ and $id_X$ is clearly a bijection.
+
+	$X\sim Y$ implies that $Y\sim X$ because the inverse of a bijection is a bijection.
+
+	$\sim$ is transitive because the composition of two bijections is a bijection.
+\end{exo}
+
+\begin{exo}
+	$f:A\to B$ is an epimorphism iff $\forall g,g':B\to C,g\circ f=g'\circ f\implies g=g'$.
+
+	Let us prove that $f$ is an epimorphism iff it is surjective.
+
+	If $f$ is surjective. Let $y\in B$, there is $x\in A$ such that $y=f(x)$.
+
+	$g(y)=g\circ f(x)=g'\circ f(x)=g'(y)$. Hence $g=g'$.
+
+	If $f$ is not surjective then, there is $y\in B\setminus f(A)$. Let $g,g':B\to\{0,1\}$ such that $\forall x\in B,g(x)=0$, $\forall x\in B\setminus\{y\},g'(x)=1$ and $g'(y)=0$.
+	
+	$g\circ f=g'\circ f$ but $g\neq g'$ so $f$ is not an epimorphism.
+\end{exo}
+
+\begin{exo}
+	If $f:A\to B$. Define $\gamma:A\to A\times B$ such that $\gamma(a)=(a,f(a))$. It is obvious that $f\circ\gamma=\id_A$.
+\end{exo}
+
+\begin{rmq}
+	The situation is represented by the following commutative diagram:
+
+	\begin{tikzcd}
+		A & A\times B\arrow[l,"\pi_A",swap]\arrow[r,"\pi_B"] & B\\
+		& A\arrow[ul,"id_A"]\arrow[ur,"f",swap]\arrow[u,dashed]
+	\end{tikzcd}
+\end{rmq}
+
+\begin{exo}
+	Let $\Gamma_f\subset A\times B$. Let $i:\Gamma_f\to A\times B$ the inclusion map.
+
+	$\pi_A\circ i:\Gamma_f\to A$ is a bijection.
+
+	Indeed, $\forall a\in A,\exists! y\in B,(a,y)\in\Gamma_f$
+
+	That is: $\forall a\in A,\exists! z\in\Gamma_f,\pi_A(z)=a$ (this $z$ is $(a,y)$)
+\end{exo}
+
+\begin{exo}
+	\begin{align*}f:\R&\to\C\\r&\mapsto e^{2\pi ir}\end{align*}
+
+The canonical decomposition of $f$ gives:
+
+	\begin{tikzcd}
+		\R\rar[->>]{\pi}\arrow[rrr,bend left=30,"f"] & \faktor{\R}{\sim} \rar{\tilde{f}} & \im f\rar[hook] & \C
+	\end{tikzcd}
+
+	\begin{align*}\alpha:\faktor{\R}{\sim} & \to S_2\\
+		{[r]_\sim} & \mapsto e^{2\pi ir}\end{align*}
+	where $S_2$ is the circle with radius $1$ in $\C$ is well defined and is a bijection.
+
+An alternative decomposition would have been:
+
+	\begin{tikzcd}
+		\R\rar[->>]{\alpha\circ\pi}\arrow[rrr,bend left=30,"f"] & S_2 \rar{\tilde{f}\circ\alpha^{-1}} & \im f\rar[hook] & \C
+	\end{tikzcd}
+
+	This exercise matches Exercise~$\ref{r-z-sphere}$.
+\end{exo}
+
+\begin{exo}
+	Suppose $\begin{tikzcd}A'\rar{\alpha}[swap]{\cong}& A''\end{tikzcd}$, $\begin{tikzcd}B'\rar{\beta}[swap]{\cong}& B''\end{tikzcd}$, $A'\cap B'\neq\emptyset$ and $A''\cap B''\neq\emptyset$.
+
+	Let \begin{align*}\gamma:A\cup B&\to A''\cup B''\\
+				x&\mapsto\alpha(x)\text{ if }x\in A\\
+				y&\mapsto\beta(y)\text{ if }x\in B\end{align*}
+	
+	$\gamma$ is well defined because $A\cap B=\emptyset$, surjective because $\alpha$ and $\beta$ are surjective, and injective because $\alpha$ and $\beta$ are injective and because $A''\cap B''=\emptyset$.
+
+	Hence, however we take `copies' of $A$ and $B$ such that their copies are disjoint, we always obtain isomophic sets.
+\end{exo}
+
+\begin{exo}\label{card-functions}
+	Let us prove by induction on $n$ that if $|A|=n$, we have $|B^A|=|B|^{|A|}$.
+
+	$|B^\emptyset|=\{\emptyset\}=|B|^\emptyset$ so the statement is true for $n=0$
+
+	If $|A|=n+1$, pick $x\in A$
+
+	A function from $A\to B$ is the datum of a function of $A\to B\setminus\{x\}$ and image $x'\in B$ for $x$. There are $|B|^{|A\setminus\{x\}|}=|B|^{|A|-1}$ such functions.
+
+	Hence $|B|^{|A|}=|B||B|^{|A|-1}=|B|^{|A|}$.
+\end{exo}
+
+\begin{rmq}
+	The previous situation is represented by the following diagram:
+
+	\begin{tikzcd}
+		\{x'\}\arrow[r] & B\cong\{x'\}\coprod B\setminus\{x'\} & B\setminus\{x'\}\arrow[l]\\
+		\{x\}\arrow[r]\arrow[u,"f"] & A\cong\{x\}\coprod A\setminus\{x\}\arrow[u,"\exists!f\parr g",dashed] & A\setminus\{x\}\arrow[l]\arrow[u,"g"]\\
+	\end{tikzcd}
+
+	$(f,g)\mapsto f\parr g$ is a bijection.
+\end{rmq}
+
+\begin{exo}
+	Let
+	\begin{alignat*}{3}f:\mathcal P(A)&\to 2^A\\
+									X&\mapsto& x&\mapsto 1\text{ if }x\in X\\
+									&&x&\mapsto 0\text{ otherwise}
+	\end{alignat*}
+
+	$f(X)$ is called the characteristic function of $X$. It is easy to prove that $f$ is a bijection.
+\end{exo}
+
+\subsection{Categories}
+
+\begin{exo}
+	Let $\circ'$ be the operation of $\Cat^{op}$. If $f:A\to B$ and $g:B\to C$ in $\Cat$, $f\circ' g=g\circ f$.
+
+	$(f\circ' g)\circ' h=h\circ(g\circ f)=(h\circ g)\circ f=f\circ'(g\circ' h)$
+
+	If $f:A\to B$ in $\Cat$:
+	$f\circ' \id_B=\id_B\circ f=f$ and $\id_A\circ' f=f\circ A=f$
+
+	Finally, it is clear that $\Hom_{\Cat^{op}}(A,B)=\Hom_{\Cat^{op}}(A',B')$ iff $A=A'$ and $B=B'$. 
+\end{exo}
+
+\begin{exo}
+	If $A$ is finite, as $\End_\Set(A)=A^A$, $|\End_\Set(A)|=|A|^{|A|}$ (see Exercise~\ref{card-functions}).
+\end{exo}
+
+\begin{exo}
+	$1_a=(a,a)$ is the identity of $a$.
+	Indeed, let $f:a\to b$, Necessarily, if $f$ exists, $f=(a,b)$.
+	
+	$f\circ 1_a=(a,b)\circ (a,a)=(a,b)=f$
+
+	Similarly, if $f:b\to a$, $1_a\circ f=f$.
+\end{exo}
+
+\begin{exo}
+	$<$ is not reflexive, so for example, $(3,3)$ would not be in the category. But, necessarily, it should be as the only possible choice for $1_3$ (think about it).
+\end{exo}
+
+\begin{exo}
+	For every preorder, we can define a category in the style of Example~3.3.
+\end{exo}
+
+\begin{rmq}
+	In fact, writing $\catname{Proset}{\restriction_A}$ the set of all categories whose set of objects is $A$, whose set of morphisms is a subset of $A^2$ and such that $\forall a,b\in A,\exists^{\leq1}f:a\to b$, there is a bijection :
+	\begin{align*}\phi:\text{Preorders on }A&\to\catname{Proset}{\restriction_A}\\R&\mapsto\text{The category such that }&\Hom(a,b)=\{(a,b)\}\text{ if }aRb\\&&\Hom(a,b)=\emptyset\text{ otherwise}\\&&(b,c)\circ(a,b)=(a,c)\end{align*}
+
+	$R$ is an order iff $\phi(R)$ is skeletal.
+
+	$R$ is an equivalence relation iff $\phi(R)$ is a groupoid.
+\end{rmq}
+
+\begin{exo}
+	The set of matrices with $n$ rows and $m$ columns is $\R^{m\times n}$ where $m=\{0,\dots,m-1\}$ and $n=\{0,\dots,n-1\}$ and $\times$ is the product of sets.
+
+	Hence, $\R^{0\times n}=\R^{\emptyset\times n}=\R^\emptyset=\{\emptyset\}$.
+	There is only one matrix with 0 lines is $\emptyset$, and, similarly, it is the only matrix with 0 columns.
+
+	If $A:m\to n$ ($A$ has $n$ lines and $m$ columns) and $B:n\to p$ ($B$ has $p$ lines and $n$ columns), then $B\circ A=B\times A$.
+
+	The product of matrices is associative and $\rm I_n=\id_n$.
+
+	\bigskip
+
+	It feels familiar.
+	If we define the category $\N$ with $\Obj(\N)=\N$ and with $\Hom_\N(n,m)=m^n$.
+	In both of the categories, it is true that if $\dom(f)=\im(f)$ then $f$ is a monomorphism iff it is an epimorphism.
+\end{exo}
+
+
+
+\end{document}
+
