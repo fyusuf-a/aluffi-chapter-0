@@ -53,6 +53,7 @@
 \newcommand{\Cat}{\catname{C}}
 
 \begin{document}
+
 \tableofcontents
 
 \section{Preliminaries: Set theory and categories}
@@ -81,13 +82,13 @@
 \end{exo}
 
 \begin{exo}
-	If $\mathcal P$ is a partition on $S$, let us define $a\sim b$ iff $\exists P\in\mathcal P,a\in P\land b\in P$.
+	If $\mathcal P$ is a partition on $S$, let us define $a\sim b$ iff $\exists p\in P,a\in P\land b\in P$.
 
-	This relation is reflexive because $\forall p\in\mathcal P,p\neq\emptyset$
+	This relation is reflexive because $\forall p\in P,p\neq\emptyset$
 
 	It is obviously symmetric.
 
-	If $a\sim b$ and $b\sim c$ then there is $P\in\mathcal P$ such that $a,b\in P$ and $P'\in\mathcal P$ such that $b,c\in P'$. $b\in P\cap P'$ so $P\cap P'\neq\emptyset$ so $P=P'$ and $a\sim c$.
+	If $a\sim b$ and $b\sim c$ then there is $p\in P$ such that $a,b\in p$ and $p'\in P$ such that $b,c\in p$. $b\in p\cap p'$ so $p\cap p'\neq\emptyset$ so $p=p'$ and $b\sim c$.
 \end{exo}
 
 \begin{rmq}
@@ -114,7 +115,7 @@
 
 	We can verify that $R$ is reflexive, symmetric, but not transitive.
 
-Trying to define $\mathcal P_R$ will not lead to a partition, as $[1]_R\neq[3]_R$ (because $(1,3)$ and $(3,1)$ are not in $R$) but $[1]_R\cap[3]_R\neq\emptyset$ (because $2\in[1]_R\cap[3]_R$).
+	Trying to define $\mathcal P_R$ will not lead to a partition, as $[1]_R\neq[3]_R$ (because $(1,3)\notin R$) but $[1]_R\cap[3]_R\neq\emptyset$ (because $2\in[1]_R\cap[3]_R$).
 \end{exo}
 
 \begin{exo}\label{r-z-sphere}
@@ -127,7 +128,7 @@ Trying to define $\mathcal P_R$ will not lead to a partition, as $[1]_R\neq[3]_R
 	\medskip
 
 	\begin{align*}f:\R&\to[0,1[\\
-				x&\mapsto x - \lfloor x\rfloor \text{ (where }\lfloor x\rfloor\text{ is the floor function)}
+				x&\mapsto\text{the only }y\in[0,1[\text{ such that }y-x\in\Z
 	\end{align*}
 
 	$f$ is clearly surjective.
